@@ -23,7 +23,7 @@ main(int argc, char **argv) {
 		printf("%s: %s\n", (*tmp)->key, args_get(args, (*tmp)->key));
 		continue;
 	}
-	
+	srv_init(10, 8080);
 	cleanup: {
 		args_free(args);
 	}

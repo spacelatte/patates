@@ -36,4 +36,7 @@ const list_t* list_break(const list_t**);
 const list_t* list_get(const list_t**, unsigned long);
 unsigned long list_size(const list_t**);
 
+const list_t* list_find_next(const list_t**, const list_t*);
+const list_t* list_unlink(const list_t**, const list_t*);
+
 #endif

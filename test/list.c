@@ -68,10 +68,12 @@ test_list_prepend(unsigned u) {
 	list_prepend(&tmp, next);
 	assert(next == tmp);
 	assert(list == next->next);
+	// add another
 	list_prepend(&tmp, tail);
 	assert(tail == tmp);
 	assert(next == tmp->next);
 	assert(list == tmp->next->next);
+	// make circular
 	list_prepend(&tmp, tmp);
 	assert(tmp  == tmp->next->next->next);
 	assert(tail == tmp->next->next->next);
