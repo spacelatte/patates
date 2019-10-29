@@ -52,8 +52,11 @@ list_append(const list_t **dst, const list_t *src) {
 
 void
 list_each(const list_t **list, list_each_f function) {
-	for(list_t *tmp=(list_t*) *list; tmp && *list != tmp->next; tmp=tmp->next) {
+	for(list_t *tmp=(list_t*) *list; tmp; tmp=tmp->next) {
 		function(tmp);
+		if(*list == tmp->next) {
+			break;
+		}
 		continue;
 	}
 	return;
@@ -61,8 +64,11 @@ list_each(const list_t **list, list_each_f function) {
 
 void
 list_each_data(const list_t **list, list_each_data_f function) {
-	for(list_t *tmp=(list_t*) *list; tmp && *list != tmp->next; tmp=tmp->next) {
+	for(list_t *tmp=(list_t*) *list; tmp; tmp=tmp->next) {
 		function(tmp->data);
+		if(*list == tmp->next) {
+			break;
+		}
 		continue;
 	}
 	return;

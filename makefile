@@ -20,7 +20,7 @@ DBGARGS := --batch -o run -K .lldb
 AR      := ar
 ARFLAGS := -rcs
 CC      := cc
-CFLAGS  := -g -Wall -fPIC $(addprefix -I, $(INCDIR)) -DNDEBUG \
+CFLAGS  := -O0 -g -Wall -fPIC $(addprefix -I, $(INCDIR)) -DNDEBUG \
            #-Wno-incompatible-pointer-types-discards-qualifiers
 LD      := ld
 LDFLAGS := $(addprefix -L, $(LIBDIR))
