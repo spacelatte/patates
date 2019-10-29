@@ -30,7 +30,6 @@ test_create(unsigned u) {
 	const list_t *list = list_create((void*) __func__);
 	assert(!(list == NULL));
 	assert(!strcmp(list->data, __func__));
-	assert(0);
 	return;
 }
 
