@@ -1,33 +1,46 @@
 
 #include <stdio.h>
 #include <signal.h>
+#include <unistd.h>
 #include <pthread.h>
 
 #include "srv.h"
+#include "main.h"
+#include "http.h"
 
-void 
+void
 srv(void) {
 	return;
 }
 
 void
+srv_signal(int s) {
+	pthread_t thread = pthread_self();
+	printf("signal %d on %p\n", s, thread);
+	return pthread_exit(NULL);
+}
+
+void
 srv_handler(const srv_connection_t *conn) {
 	if(!conn) return;
+	for(int i=0; i<32; i++) signal(i, &srv_signal);
 	char *buffer = (char*) calloc(SRV_BUFFER_SIZE, sizeof(char));
 	if(!recv(conn->fd, buffer, SRV_BUFFER_SIZE, 0)) return;
 	//if(!read(conn->fd, buffer, SRV_BUFFER_SIZE)) return;
 	fprintf(stderr, "%s\n", buffer);
 	snprintf(buffer, SRV_BUFFER_SIZE,
 		"HTTP/1.1 200 OK\n"
+		"Server: %s/%s\n"
 		"Content-Type: text/plain\n"
 		"Connection: close\n"
 		"\n"
 		"Hello World\n",
-		NULL
+		MAIN_NAME, MAIN_VER, NULL
 	);
 	send(conn->fd, buffer, strlen(buffer), 0);
 	close(conn->fd);
-	return;
+	free(buffer);
+	return pthread_exit(NULL);
 }
 
 const srv_connection_t*
@@ -63,12 +76,12 @@ srv_init(const int count, const unsigned short port) {
 		},
 	};
 	int sockfd = socket(AF_INET, SOCK_STREAM, 0);
-	setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &(int){1}, sizeof(int));
-	setsockopt(sockfd, SOL_SOCKET, SO_REUSEPORT, &(int){1}, sizeof(int));
+	setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &(int) { 1 }, sizeof(int));
+	setsockopt(sockfd, SOL_SOCKET, SO_REUSEPORT, &(int) { 1 }, sizeof(int));
 	int bindfd = bind(sockfd, (const sockaddr_t*) &server, sizeof(server));
 	listen(sockfd, count);
 	while(bindfd >= 0) {
-		(srv_loop(sockfd), NULL);
+		pthread_detach(srv_loop(sockfd));
 		continue;
 	}
 	close(sockfd);
