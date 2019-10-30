@@ -41,13 +41,13 @@ test_list_append(unsigned u) {
 	const list_t *next = list_create((void*) "2");
 	const list_t *tail = list_create((void*) "3");
 	// initial
-	list_append(&list, next);
+	list_append((const list_t**) &list, next);
 	assert(next == list->next);
 	// add another
-	list_append(&next, tail);
+	list_append((const list_t**) &next, tail);
 	assert(tail == next->next);
 	// make circular
-	list_append(&tail, list);
+	list_append((const list_t**) &tail, list);
 	assert(list == list->next->next->next);
 	assert(next == list->next->next->next->next);
 	assert(tail == list->next->next->next->next->next);
@@ -65,16 +65,16 @@ test_list_prepend(unsigned u) {
 	const list_t *tail = list_create((void*) "3");
 	list_t *tmp = (list_t*) list;
 	// initial
-	list_prepend(&tmp, next);
+	list_prepend((const list_t**) &tmp, next);
 	assert(next == tmp);
 	assert(list == next->next);
 	// add another
-	list_prepend(&tmp, tail);
+	list_prepend((const list_t**) &tmp, tail);
 	assert(tail == tmp);
 	assert(next == tmp->next);
 	assert(list == tmp->next->next);
 	// make circular
-	list_prepend(&tmp, tmp);
+	list_prepend((const list_t**) &tmp, tmp);
 	assert(tmp  == tmp->next->next->next);
 	assert(tail == tmp->next->next->next);
 	assert(list == tmp->next->next);
