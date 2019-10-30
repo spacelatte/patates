@@ -11,8 +11,6 @@ SOURCE  := args http list log srv type
 
 RM      := rm
 ARGS    := port=8080 root=/tmp
-ARCH    := -arch x86_64 -platform_version macos \
-           10.9 $(shell sw_vers -productVersion)
 MKDIR   := mkdir
 
 DBG     := lldb
@@ -24,9 +22,21 @@ CFLAGS  := -O0 -g -Wall -fPIC $(addprefix -I, $(INCDIR)) -DNDEBUG \
            #-Wno-incompatible-pointer-types-discards-qualifiers
 LD      := ld
 LDFLAGS := $(addprefix -L, $(LIBDIR))
-LIBS    := -lm -lc -lpthread
+LIBS    := -lm -lc -ldl -lpthread
 
 TESTBIN := $(addprefix $(BINDIR), $(addsuffix .test, $(SOURCE)))
+SYSTEM  := $(shell uname)
+
+ifeq ($(SYSTEM),Darwin)
+ARCH := -arch x86_64 -platform_version macos \
+           10.9 $(shell sw_vers -productVersion)
+endif
+export ARCH
+
+ifeq ($(SYSTEM),Linux)
+LD   := gcc
+endif
+export LD
 
 all: $(BINDIR)$(TARGET) $(TESTBIN)
 	tree
@@ -50,6 +60,7 @@ clean:
 	$(addprefix $(LIBDIR), $(addsuffix .a, $(SOURCE))) \
 	$(addprefix $(OBJDIR), $(addsuffix .o, $(SOURCE))) \
 	$(addprefix $(BINDIR), $(addsuffix .test, $(SOURCE))) \
+	$(addprefix $(OBJDIR), $(addsuffix _test.o, $(SOURCE))) \
 	$(addprefix $(BINDIR), $(TARGET)) $(BINDIR)*.dSYM
 
 mkfile: $(SRCDIR) $(INCDIR) $(TESTDIR)
@@ -58,7 +69,7 @@ mkfile: $(SRCDIR) $(INCDIR) $(TESTDIR)
 	touch $(addprefix $(SRCDIR),  $(addsuffix .c, $(NAME)))
 	touch $(addprefix $(TESTDIR), $(addsuffix .c, $(NAME)))
 
-$(BINDIR) $(LIBDIR) $(OBJDIR) $(INCDIR) $(SRCDIR) $(TESTDIR) %/:
+$(BINDIR) $(LIBDIR) $(OBJDIR) $(INCDIR) $(SRCDIR) $(TESTDIR):
 	$(MKDIR) -p $@
 
 $(OBJDIR)%.o: $(OBJDIR)
@@ -70,15 +81,17 @@ $(LIBDIR)%.a: $(OBJDIR)%.o
 	$(AR) $(ARFLAGS) $@ $^
 
 $(BINDIR)%: $(BINDIR)
-$(BINDIR)$(TARGET): $(addprefix $(LIBDIR), $(addsuffix .a, $(SOURCE) main))
+$(BINDIR)$(TARGET): \
+	$(addprefix $(OBJDIR), $(addsuffix .o, main)) \
+	$(addprefix $(LIBDIR), $(addsuffix .a, $(SOURCE)))
 	$(LD) $(LDFLAGS) $(LIBS) $(ARCH) -o $@ $^
 
 $(OBJDIR)%_test.o: $(TESTDIR)%.c
 	$(CC) $(CFLAGS) -o $@ -c $^
 
 $(BINDIR)%.test: \
-	$(addprefix $(LIBDIR), $(addsuffix .a, %)) \
-	$(addprefix $(OBJDIR), $(addsuffix _test.o, %))
+	$(addprefix $(OBJDIR), $(addsuffix _test.o, %)) \
+	$(addprefix $(LIBDIR), $(addsuffix .a, %))
 	$(LD) $(LDFLAGS) $(LIBS) $(ARCH) -o $@ $^
 
 #TESTPRE := test_
