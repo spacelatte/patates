@@ -47,6 +47,14 @@ typedef struct HTTP {
 	unsigned char *body;
 } http_t;
 
+
+//extern const char *http_delimiters[];
+
 void http(void);
+
+const char** http_parse_raw(const char*);
+
+const http_header_t* http_parse_header(const char*);
+
 
 #endif

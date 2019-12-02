@@ -7,19 +7,20 @@ INCDIR  := ./inc/
 SRCDIR  := ./src/
 TESTDIR := ./test/
 TARGET  := patates
-SOURCE  := args http list log srv type
+SOURCE  := args srv http list log type
 
 RM      := rm
-ARGS    := port=8080 root=/tmp
 MKDIR   := mkdir
 
+PORT    := 8000
+ARGS    := port=$(PORT) root=/tmp
+
 DBG     := lldb
-DBGARGS := --batch -o run -K .lldb
+DBGARGS := --batch -o run -K .$(DBG)
 AR      := ar
 ARFLAGS := -rcs
 CC      := cc
-CFLAGS  := -O0 -g -Wall -fPIC $(addprefix -I, $(INCDIR)) -DNDEBUG \
-           #-Wno-incompatible-pointer-types-discards-qualifiers
+CFLAGS  := -O0 -g -Wall -fPIC $(addprefix -I, $(INCDIR)) -DNDEBUG
 LD      := ld
 LDFLAGS := $(addprefix -L, $(LIBDIR))
 LIBS    := -lm -lc -ldl -lpthread
@@ -28,35 +29,49 @@ TESTBIN := $(addprefix $(BINDIR), $(addsuffix .test, $(SOURCE)))
 SYSTEM  := $(shell uname)
 
 ifeq ($(SYSTEM),Darwin)
-ARCH := -arch x86_64 -platform_version macos \
+ARCH = -arch x86_64 -platform_version macos \
            10.9 $(shell sw_vers -productVersion)
 endif
 export ARCH
 
 ifeq ($(SYSTEM),Linux)
-LD   := gcc
+LD      := gcc
+DBG     := gdb
+DBGARGS := --batch -ex run -x .$(DBG)
 endif
 export LD
 
-all: $(BINDIR)$(TARGET) $(TESTBIN)
-	tree
+default: $(BINDIR)$(TARGET)
+	-tree $(BINDIR)
+
+all: default $(TESTBIN)
+	-tree
 
 run: $(BINDIR)$(TARGET)
-	./$^ $(ARGS)
+	./$< $(ARGS)
+
+fn: $(BINDIR)$(TARGET)
+	sleep 1 && curl -vskL 0:$(PORT) &
+	./$< $(ARGS)
 
 dbg: $(BINDIR)$(TARGET)
-	$(DBG) $(DBGARGS) -- ./$^
+	$(DBG) $(DBGARGS) -- ./$<
+
+tests.bin: $(TESTBIN)
+	-tree $(TESTDIR)
 
 tests.dbg: $(TESTBIN)
 	for test in $^; do $(DBG) $(DBGARGS) -- ./$${test}; done
 
-tests.exec: $(TESTBIN)
+tests.run: $(TESTBIN)
 	for test in $^; do ./$${test}; done
 
-tests: tests.dbg # default
+tests: $(TESTBIN) # tests.dbg # default
 
 clean:
 	$(RM) -rf \
+	$(addprefix $(OBJDIR), $(addsuffix .o, main)) \
+	$(addprefix $(LIBDIR), $(addsuffix .a, main)) \
 	$(addprefix $(LIBDIR), $(addsuffix .a, $(SOURCE))) \
 	$(addprefix $(OBJDIR), $(addsuffix .o, $(SOURCE))) \
 	$(addprefix $(BINDIR), $(addsuffix .test, $(SOURCE))) \
@@ -82,7 +97,7 @@ $(LIBDIR)%.a: $(OBJDIR)%.o
 
 $(BINDIR)%: $(BINDIR)
 $(BINDIR)$(TARGET): \
-	$(addprefix $(OBJDIR), $(addsuffix .o, main)) \
+	$(addprefix $(LIBDIR), $(addsuffix .a, main)) \
 	$(addprefix $(LIBDIR), $(addsuffix .a, $(SOURCE)))
 	$(LD) $(LDFLAGS) $(LIBS) $(ARCH) -o $@ $^
 
@@ -92,7 +107,11 @@ $(OBJDIR)%_test.o: $(TESTDIR)%.c
 $(BINDIR)%.test: \
 	$(addprefix $(OBJDIR), $(addsuffix _test.o, %)) \
 	$(addprefix $(LIBDIR), $(addsuffix .a, %))
-	$(LD) $(LDFLAGS) $(LIBS) $(ARCH) -o $@ $^
+	$(LD)  $(LDFLAGS) $(LIBS) $(ARCH) -o $@ $^
+	# $(DBG) $(DBGARGS) -- ./$@
+
+$(BINDIR)srv.test:  $(addprefix $(LIBDIR), $(addsuffix .a, list))
+$(BINDIR)http.test: $(addprefix $(LIBDIR), $(addsuffix .a, list))
 
 #TESTPRE := test_
 #$(OBJDIR)$(TESTPRE)%.o: $(TESTDIR)$(TESTPRE)%.c

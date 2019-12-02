@@ -4,6 +4,8 @@
 #include <pthread.h>
 #include <unistd.h>
 
+#include "main.h"
+
 #include "args.h"
 #include "list.h"
 
@@ -18,18 +20,20 @@ test(list_t *node) {
 
 int
 main(const int argc, const char **argv) {
-	map_t **args = (map_t**) args_parse(argc, argv);
-	for(map_t **tmp=args; tmp && *tmp; tmp++) {
-		printf("%s: %s\n", 
-			(*tmp)->key, 
-			args_get((const map_t**) args, (*tmp)->key)
+	const map_t **args = (const map_t**) args_parse(argc, argv);
+	for(map_t **tmp=(map_t**) args; tmp && *tmp; tmp++) {
+		printf("%s: %s\n", (*tmp)->key,
+			args_get(args, (*tmp)->key)
 		);
 		continue;
 	}
-	srv_init(10, 8080);
+	srv_init(
+		atoi(args_get_default(args, "queue", "10")),
+		atoi(args_get_default(args, "port", "8080"))
+	);
 	goto cleanup;
 	cleanup: {
-		args_free((const map_t**) args);
+		args_free(args);
 	}
 	return 0;
 }

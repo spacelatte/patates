@@ -11,7 +11,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 
-#define SRV_BUFFER_SIZE (1*1024*1024) //1048576
+#define SRV_BUFFER_SIZE (1*1024*1024) // 1048576 = 1M
 
 typedef struct sockaddr    sockaddr_t;
 typedef struct sockaddr_in sockaddr_in_t;

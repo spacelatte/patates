@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+#include "main.h"
 #include "list.h"
 
 void
@@ -11,7 +12,8 @@ list(void) {
 
 const list_t*
 list_create(void *data) {
-	list_t *list = (list_t*) calloc(1, sizeof(list_t));
+	list_t *list = ALLOC(1, list_t);
+	//(list_t*) calloc(1, sizeof(list_t)); // TODO: use ALLOC
 	list->data = data;
 	return list;
 }
@@ -19,7 +21,7 @@ list_create(void *data) {
 const list_t*
 list_head(const list_t **list) {
 	if(!list || !*list) return NULL;
-	list_t *tmp = (list_t*)(*list);
+	list_t *tmp = *(list_t**) list;
 	while(tmp && tmp->prev && *list != tmp->prev) {
 		tmp = tmp->prev;
 		continue;
@@ -30,7 +32,7 @@ list_head(const list_t **list) {
 const list_t*
 list_tail(const list_t **list) {
 	if(!list || !*list) return NULL;
-	list_t *tmp = (list_t*)(*list);
+	list_t *tmp = *(list_t**) list;
 	while(tmp && tmp->next && *list != tmp->next) {
 		tmp = tmp->next;
 		continue;
@@ -57,7 +59,7 @@ list_append(const list_t **dst, const list_t *src) {
 void
 list_each(const list_t **list, list_each_f function) {
 	if(!list || !*list || !function) return;
-	for(list_t *tmp=(list_t*)(*list); tmp; tmp=tmp->next) {
+	for(list_t *tmp=*(list_t**) list; tmp; tmp=tmp->next) {
 		function(tmp);
 		if(*list == tmp->next) {
 			break;
@@ -70,7 +72,7 @@ list_each(const list_t **list, list_each_f function) {
 void
 list_each_data(const list_t **list, list_each_data_f function) {
 	if(!list || !*list || !function) return;
-	for(list_t *tmp=(list_t*)(*list); tmp; tmp=tmp->next) {
+	for(list_t *tmp=*(list_t**) list; tmp; tmp=tmp->next) {
 		function(tmp->data);
 		if(*list == tmp->next) {
 			break;
@@ -102,7 +104,7 @@ list_free_data(const list_t **list) {
 const list_t*
 list_circular(const list_t **list) {
 	if(!list || !*list) return NULL;
-	list_t *tmp = (list_t*)(*list);
+	list_t *tmp = *(list_t**) list;
 	while(tmp && *list != tmp->next) {
 		tmp = tmp->next;
 		continue;
@@ -113,7 +115,7 @@ list_circular(const list_t **list) {
 const list_t*
 list_break(const list_t **list) {
 	if(!list || !*list) return NULL;
-	list_t *tmp = (list_t*)(*list);
+	list_t *tmp = *(list_t**) list;
 	list_t *next = tmp->next;
 	tmp->next = NULL;
 	return next;
@@ -122,7 +124,7 @@ list_break(const list_t **list) {
 const list_t*
 list_get(const list_t **list, unsigned long n) {
 	if(!list || !*list) return NULL;
-	list_t *tmp = (list_t*)(*list);
+	list_t *tmp = *(list_t**) list;
 	while(tmp && *list != tmp && n--) {
 		tmp = tmp->next;
 		continue;
@@ -133,7 +135,7 @@ list_get(const list_t **list, unsigned long n) {
 unsigned long
 list_size(const list_t **list) {
 	if(!list || !*list) return 0;
-	list_t *tmp = (list_t*)(*list);
+	list_t *tmp = *(list_t**) list;
 	unsigned long count = 0;
 	while(tmp && *list != tmp) {
 		tmp = tmp->next;
@@ -146,7 +148,7 @@ list_size(const list_t **list) {
 const list_t*
 list_find_next(const list_t **list, const list_t *next) {
 	if(!list || !*list || !next) return NULL;
-	list_t *tmp = (list_t*)(*list);
+	list_t *tmp = *(list_t**) list;
 	while(tmp && tmp->next && *list != tmp->next && next != tmp->next) {
 		tmp = tmp->next;
 		continue;

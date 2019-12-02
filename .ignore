@@ -1,3 +1,6 @@
 bin/*
 lib/*
 obj/*
+DerivedData/*
+*.xcodeproj
+patates/*

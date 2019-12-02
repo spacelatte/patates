@@ -35,7 +35,7 @@ class Tests(object):
 		return self.httpreq("/data")
 
 def main(args):
-	with subprocess.Popen("./exe") as proc:
+	with subprocess.Popen("./bin/patates") as proc:
 		print(Tests(proc, PORT).runAll())
 		pass
 	return False
