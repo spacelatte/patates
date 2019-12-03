@@ -1,3 +1,13 @@
+/*bin/echo
+FILE="$(basename "$0").exe"
+trap "rm -f '$FILE'" EXIT
+cd "$(dirname "$0")"
+cc -I../inc -o "$FILE" \
+	"$(basename "$0")" \
+	"../src/$(basename "$0")" \
+	&& env "$FILE"
+exit
+*/
 
 #if defined(NDEBUG)
 #undef NDEBUG
@@ -7,9 +17,9 @@
 #include <stdlib.h>
 #include <assert.h>
 
-#include "main.h"
-#include "args.h"
-#include "test.h"
+#include "../inc/main.h"
+#include "../inc/args.h"
+#include "../inc/test.h"
 
 void
 test_args_split(unsigned u) {

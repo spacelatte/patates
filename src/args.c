@@ -1,10 +1,16 @@
+/*bin/echo
+FILE="$0.exe"
+trap "rm -f '$FILE'" EXIT
+cc -I../inc -o "$FILE" -c "$0"
+exit
+*/
 
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
 
-#include "main.h"
-#include "args.h"
+#include "../inc/main.h"
+#include "../inc/args.h"
 
 void
 args(void) {
@@ -27,7 +33,7 @@ args_split(const char *arg) {
 		pair[count++] = tmp;
 		continue;
 	}
-	free(copy);
+	free((char*) copy);
 	return pair;
 }
 

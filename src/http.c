@@ -1,3 +1,9 @@
+/*bin/echo
+FILE="$0.exe"
+trap "rm -f '$FILE'" EXIT
+cc -I../inc -o "$FILE" -c "$0"
+exit
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -5,9 +11,9 @@
 #include <assert.h>
 #include <signal.h>
 
-#include "main.h"
-#include "list.h"
-#include "http.h"
+#include "../inc/main.h"
+#include "../inc/list.h"
+#include "../inc/http.h"
 
 const char http_header_delimiters[] = " :;,";
 
@@ -53,6 +59,7 @@ http_parse_headers(const char **headers) {
 
 http_t*
 http_parse_request(const char **lines) {
+	http_t http;
 	return NULL;
 }
 
@@ -76,5 +83,11 @@ http_parse_raw(const char *buffer) {
 
 const char*
 http_handle_request(const char *request) {
-
+	return NULL;
 }
+
+/*
+
+
+
+*/

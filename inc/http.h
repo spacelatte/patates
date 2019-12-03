@@ -1,8 +1,12 @@
+/*bin/echo
+cc -E $0
+exit
+*/
 
 #ifndef _HTTP_H_
 #define _HTTP_H_
 
-#include "list.h"
+#include "./list.h"
 
 typedef union http_version {
 	char str[16]; // raw

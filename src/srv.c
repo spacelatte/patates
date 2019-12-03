@@ -1,3 +1,9 @@
+/*bin/echo
+FILE="$0.exe"
+trap "rm -f '$FILE'" EXIT
+cc -I../inc -o "$FILE" -c "$0"
+exit
+*/
 
 #include <stdio.h>
 #include <stdarg.h>
@@ -5,9 +11,9 @@
 #include <unistd.h>
 #include <pthread.h>
 
-#include "main.h"
-#include "http.h"
-#include "srv.h"
+#include "../inc/main.h"
+#include "../inc/http.h"
+#include "../inc/srv.h"
 
 void
 srv(void) {

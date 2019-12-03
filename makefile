@@ -7,7 +7,7 @@ INCDIR  := ./inc/
 SRCDIR  := ./src/
 TESTDIR := ./test/
 TARGET  := patates
-SOURCE  := args srv http list log type
+SOURCE  := file args srv http list log type
 
 RM      := rm
 MKDIR   := mkdir
@@ -47,6 +47,9 @@ default: $(BINDIR)$(TARGET)
 all: default $(TESTBIN)
 	-tree
 
+edit:
+	find . \( -iname '*.h' -or -iname '*.c' \) -exec subl {} +
+
 run: $(BINDIR)$(TARGET)
 	./$< $(ARGS)
 
@@ -69,7 +72,7 @@ tests.run: $(TESTBIN)
 tests: $(TESTBIN) # tests.dbg # default
 
 clean:
-	$(RM) -rf \
+	$(RM) -rf DerivedData \
 	$(addprefix $(OBJDIR), $(addsuffix .o, main)) \
 	$(addprefix $(LIBDIR), $(addsuffix .a, main)) \
 	$(addprefix $(LIBDIR), $(addsuffix .a, $(SOURCE))) \

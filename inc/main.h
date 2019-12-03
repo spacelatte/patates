@@ -1,3 +1,7 @@
+/*bin/echo
+cc -E $0
+exit
+*/
 
 #ifndef _MAIN_H_
 #define _MAIN_H_

@@ -1,3 +1,7 @@
+/*bin/echo
+cc -E $0
+exit
+*/
 
 #ifndef _TEST_H_
 #define _TEST_H_

@@ -1,3 +1,7 @@
+/*bin/echo
+cc -E $0
+exit
+*/
 
 #ifndef _SRV_H_
 #define _SRV_H_

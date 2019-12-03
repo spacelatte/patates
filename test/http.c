@@ -1,3 +1,13 @@
+/*bin/echo
+FILE="$(basename "$0").exe"
+trap "rm -f '$FILE'" EXIT
+cd "$(dirname "$0")"
+cc -I../inc -o "$FILE" \
+	"$(basename "$0")" \
+	"../src/$(basename "$0")" \
+	&& env "$FILE"
+exit
+*/
 
 #if defined(NDEBUG)
 #undef NDEBUG
@@ -7,9 +17,9 @@
 #include <stdlib.h>
 #include <assert.h>
 
-#include "main.h"
-#include "http.h"
-#include "test.h"
+#include "../inc/main.h"
+#include "../inc/http.h"
+#include "../inc/test.h"
 
 void
 test_http_parse_request_line(unsigned u) {
@@ -77,5 +87,6 @@ int main(int argc, char **argv) {
 		if(tests[i]) test_run(i, tests[i]);
 		continue;
 	}
+	list_t list;
 	return 0;
 }

@@ -1,9 +1,15 @@
+/*bin/echo
+FILE="$0.exe"
+trap "rm -f '$FILE'" EXIT
+cc -I../inc -o "$FILE" -c "$0"
+exit
+*/
 
 #include <stdlib.h>
 #include <stdbool.h>
 
-#include "main.h"
-#include "list.h"
+#include "../inc/main.h"
+#include "../inc/list.h"
 
 void
 list(void) {

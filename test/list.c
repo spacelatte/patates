@@ -1,3 +1,13 @@
+/*bin/echo
+FILE="$(basename "$0").exe"
+trap "rm -f '$FILE'" EXIT
+cd "$(dirname "$0")"
+cc -I../inc -o "$FILE" \
+	"$(basename "$0")" \
+	"../src/$(basename "$0")" \
+	&& env "$FILE"
+exit
+*/
 
 #if defined(NDEBUG)
 #undef NDEBUG
@@ -8,9 +18,9 @@
 #include <signal.h>
 #include <assert.h>
 
-#include "main.h"
-#include "list.h"
-#include "test.h"
+#include "../inc/main.h"
+#include "../inc/list.h"
+#include "../inc/test.h"
 
 void
 test_list_create(unsigned u) {

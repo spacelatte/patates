@@ -1,16 +1,22 @@
+/*bin/echo
+FILE="$0.exe"
+trap "rm -f '$FILE'" EXIT
+cc -I../inc -o "$FILE" -c "$0"
+exit
+*/
 
 #include <stdio.h>
 #include <signal.h>
 #include <pthread.h>
 #include <unistd.h>
 
-#include "main.h"
+#include "../inc/main.h"
 
-#include "args.h"
-#include "list.h"
+#include "../inc/args.h"
+#include "../inc/list.h"
 
-#include "srv.h"
-#include "http.h"
+#include "../inc/srv.h"
+#include "../inc/http.h"
 
 bool
 test(list_t *node) {

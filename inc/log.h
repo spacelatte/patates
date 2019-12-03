@@ -1,3 +1,7 @@
+/*bin/echo
+cc -E $0
+exit
+*/
 
 #ifndef _LOG_H_
 #define _LOG_H_
