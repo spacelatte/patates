@@ -58,15 +58,12 @@ test_file_size(unsigned u) {
 	return;
 }
 
-int main(int argc, char **argv) {
+int
+main(int argc, char **argv) {
 	test_print(__func__, "%s:%d", argv[0], argc);
-	test_proto_f tests[] = {
+	test_cycle((test_proto_f[]) {
 		&test_file_size,
 		NULL,
-	};
-	for(int i=0; i<LENGTH(tests) && (tests[i]); i++) {
-		if(tests[i]) test_run(i, tests[i]);
-		continue;
-	}
+	});
 	return 0;
 }

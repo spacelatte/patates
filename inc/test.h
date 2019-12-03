@@ -28,4 +28,12 @@ void test_run(unsigned u, test_proto_f fn) {
 	return fn(u);
 }
 
+void test_cycle(test_proto_f *tests) {
+	for(int i=0; tests && tests[i]; i++) {
+		test_run(i, tests[i]);
+		continue;
+	}
+	return;
+}
+
 #endif

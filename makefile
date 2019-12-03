@@ -47,6 +47,9 @@ default: $(BINDIR)$(TARGET)
 all: default $(TESTBIN)
 	-tree
 
+help:
+	-cat makefile
+
 edit:
 	find . \( -iname '*.h' -or -iname '*.c' \) -exec subl {} +
 

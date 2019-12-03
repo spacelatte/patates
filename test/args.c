@@ -93,19 +93,16 @@ test_args_get_default(unsigned u) {
 	return;
 }
 
-int main(int argc, char **argv) {
+int
+main(int argc, char **argv) {
 	test_print(__func__, "%s:%d", argv[0], argc);
-	test_proto_f tests[] = {
+	test_cycle((test_proto_f[]) {
 		&test_args_split,
 		&test_args_parse,
 		&test_args_free,
 		&test_args_get,
 		&test_args_get_default,
 		NULL,
-	};
-	for(int i=0; i<LENGTH(tests) && (tests[i]); i++) {
-		if(tests[i]) test_run(i, tests[i]);
-		continue;
-	}
+	});
 	return 0;
 }

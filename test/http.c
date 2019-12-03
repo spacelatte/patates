@@ -75,18 +75,14 @@ test_http_parse_headers(unsigned u) {
 	return;
 }
 
-int main(int argc, char **argv) {
+int
+main(int argc, char **argv) {
 	test_print(__func__, "%s:%d", argv[0], argc);
-	test_proto_f tests[] = {
+	test_cycle((test_proto_f[]) {
 		&test_http_parse_request_line,
 		&test_http_parse_header,
 		&test_http_parse_headers,
 		NULL,
-	};
-	for(int i=0; i<LENGTH(tests) && (tests[i]); i++) {
-		if(tests[i]) test_run(i, tests[i]);
-		continue;
-	}
-	list_t list;
+	});
 	return 0;
 }
