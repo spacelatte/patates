@@ -1,13 +1,14 @@
 #!/usr/bin/env make -f
 
+PROJECT := patates
 BINDIR  := ./bin/
 LIBDIR  := ./lib/
 OBJDIR  := ./obj/
 INCDIR  := ./inc/
 SRCDIR  := ./src/
 TESTDIR := ./test/
-TARGET  := patates
-SOURCE  := file args srv http list log type
+TARGET  := $(PROJECT).exe
+MODULES := file map args srv http list log type
 
 RM      := rm
 MKDIR   := mkdir
@@ -23,23 +24,22 @@ CC      := cc
 CFLAGS  := -O0 -g -Wall -fPIC $(addprefix -I, $(INCDIR)) -DNDEBUG
 LD      := ld
 LDFLAGS := $(addprefix -L, $(LIBDIR))
-LIBS    := -lm -lc -ldl -lpthread
+LIBS    := $(addprefix -l, m c dl pthread)
 
-TESTBIN := $(addprefix $(BINDIR), $(addsuffix .test, $(SOURCE)))
+TESTBIN := $(addprefix $(BINDIR), $(addsuffix .test, $(MODULES)))
 SYSTEM  := $(shell uname)
 
 ifeq ($(SYSTEM),Darwin)
-ARCH = -arch x86_64 -platform_version macos \
-           10.9 $(shell sw_vers -productVersion)
+ARCH = -arch x86_64 -platform_version macos 10.9 $(shell sw_vers -productVersion)
 endif
-export ARCH
+#export ARCH
 
 ifeq ($(SYSTEM),Linux)
 LD      := gcc
 DBG     := gdb
 DBGARGS := --batch -ex run -x .$(DBG)
 endif
-export LD
+#export LD
 
 default: $(BINDIR)$(TARGET)
 	-tree $(BINDIR)
@@ -48,10 +48,15 @@ all: default $(TESTBIN)
 	-tree
 
 help:
-	-cat makefile
+	-grep -oE '^(\w|\.)+:[^#]+' makefile | column -t
 
 edit:
 	find . \( -iname '*.h' -or -iname '*.c' \) -exec subl {} +
+
+docker:
+	docker build --compress -t $(PROJECT) -f dockerfile $$(pwd)
+	docker run --name=$(PROJECT) --rm -i $(PROJECT) \
+		sh -c 'for i in *.test; do ./$$i || break; done'
 
 run: $(BINDIR)$(TARGET)
 	./$< $(ARGS)
@@ -74,14 +79,17 @@ tests.run: $(TESTBIN)
 
 tests: $(TESTBIN) # tests.dbg # default
 
+watch:
+	watchexec -n -c -e 'h,c,makefile' $(MAKE) clean all tests.run fn
+
 clean:
 	$(RM) -rf DerivedData \
 	$(addprefix $(OBJDIR), $(addsuffix .o, main)) \
 	$(addprefix $(LIBDIR), $(addsuffix .a, main)) \
-	$(addprefix $(LIBDIR), $(addsuffix .a, $(SOURCE))) \
-	$(addprefix $(OBJDIR), $(addsuffix .o, $(SOURCE))) \
-	$(addprefix $(BINDIR), $(addsuffix .test, $(SOURCE))) \
-	$(addprefix $(OBJDIR), $(addsuffix _test.o, $(SOURCE))) \
+	$(addprefix $(LIBDIR), $(addsuffix .a, $(MODULES))) \
+	$(addprefix $(OBJDIR), $(addsuffix .o, $(MODULES))) \
+	$(addprefix $(BINDIR), $(addsuffix .test, $(MODULES))) \
+	$(addprefix $(OBJDIR), $(addsuffix _test.o, $(MODULES))) \
 	$(addprefix $(BINDIR), $(TARGET)) $(BINDIR)*.dSYM
 
 mkfile: $(SRCDIR) $(INCDIR) $(TESTDIR)
@@ -104,7 +112,7 @@ $(LIBDIR)%.a: $(OBJDIR)%.o
 $(BINDIR)%: $(BINDIR)
 $(BINDIR)$(TARGET): \
 	$(addprefix $(LIBDIR), $(addsuffix .a, main)) \
-	$(addprefix $(LIBDIR), $(addsuffix .a, $(SOURCE)))
+	$(addprefix $(LIBDIR), $(addsuffix .a, $(MODULES)))
 	$(LD) $(LDFLAGS) $(LIBS) $(ARCH) -o $@ $^
 
 $(OBJDIR)%_test.o: $(TESTDIR)%.c
