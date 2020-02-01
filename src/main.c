@@ -18,15 +18,32 @@ exit
 #include "srv.h"
 #include "http.h"
 
+#include "signal.h"
+
+static const map_t **args = NULL;
+
 bool
 test(list_t *node) {
 	printf("node:%p, data=%p, next=%p \n", node, node->data, node->next);
 	return true;
 }
 
+__attribute__((constructor)) static void
+construct(void) {
+	fprintf(stderr, "%s: %s: %d\n", __FILE__, __FUNCTION__, __LINE__);
+	signal_init();
+	return;
+}
+
+__attribute__((destructor)) static void destruct(void) {
+	fprintf(stderr, "%s: %s: %d\n", __FILE__, __FUNCTION__, __LINE__);
+	args_free(args);
+	return;
+}
+
 int
 main(const int argc, const char **argv) {
-	const map_t **args = (const map_t**) args_parse(argc, argv);
+	args = (const map_t**) args_parse(argc, argv);
 	for(map_t **tmp=(map_t**) args; tmp && *tmp; tmp++) {
 		printf("%s: %s\n", (*tmp)->key,
 			args_get(args, (*tmp)->key)
@@ -37,9 +54,5 @@ main(const int argc, const char **argv) {
 		atoi(args_get_default(args, "queue", "10")),
 		atoi(args_get_default(args, "port", "8080"))
 	);
-	goto cleanup;
-	cleanup: {
-		args_free(args);
-	}
 	return 0;
 }

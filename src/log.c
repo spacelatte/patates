@@ -10,6 +10,7 @@ exit
 #include <time.h>
 
 #include "log.h"
+
 __attribute__((constructor)) static void
 construct(void) {
 	fprintf(stderr, "%s: %s: %d\n", __FILE__, __FUNCTION__, __LINE__);
