@@ -56,7 +56,8 @@ typedef struct HTTP {
 
 void http_init(void);
 
-const char** http_parse_raw(const char*);
+//const char**
+struct { char *in, *body; } http_parse_raw(const char*);
 
 const http_header_t* http_parse_header(const char*);
 

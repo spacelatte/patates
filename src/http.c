@@ -75,7 +75,8 @@ http_parse_request(const char **lines) {
 	return NULL;
 }
 
-const char**
+//const char**
+typeof(http_parse_raw(NULL))
 http_parse_raw(const char *buffer) {
 	char *body = NULL;
 	for(
@@ -89,7 +90,8 @@ http_parse_raw(const char *buffer) {
 
 	printf("body: .%s.\n", body);
 	printf("head: .%s.\n", buffer);
-	return (const char**) { &buffer, &body, };
+	//return (const char**) { &buffer, &body, };
+	return ( (typeof(http_parse_raw(NULL))) { .in = buffer, .body = body });
 }
 
 
