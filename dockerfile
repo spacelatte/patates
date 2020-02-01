@@ -1,6 +1,6 @@
 #!/usr/bin/env -S docker build --compress -t pvtmert/patates -f
 
-FROM debian as build
+FROM debian:stable as build
 
 RUN apt update
 RUN apt install -y \
@@ -8,9 +8,9 @@ RUN apt install -y \
 
 WORKDIR /data
 COPY ./ ./
-RUN make clean all tests
+RUN make clean all tests.run
 
-#FROM debian
-#WORKDIR /data
-#COPY --from=build /data/bin ./
-#CMD ./patates port=80 root=/srv
+FROM debian:slim
+WORKDIR /data
+COPY --from=build /data/bin ./
+CMD ./patates port=80 root=/srv
