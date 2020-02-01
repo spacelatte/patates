@@ -14,6 +14,11 @@ const unsigned TEST_PAD = -24;
 
 typedef void (*test_proto_f)(unsigned);
 
+void
+test_init(void) {
+	return;
+}
+
 void test_print(const char *fn, const char *fmt, ...) {
 	va_list args;
 	va_start(args, fmt);

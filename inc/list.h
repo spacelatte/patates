@@ -18,7 +18,7 @@ typedef struct List {
 typedef bool (*list_each_f)(list_t*);
 typedef void (*list_each_data_f)(void*);
 
-void list(void);
+void list_init(void);
 
 const list_t* list_create(void*);
 

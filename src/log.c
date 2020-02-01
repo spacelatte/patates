@@ -9,10 +9,17 @@ exit
 #include <errno.h>
 #include <time.h>
 
-#include "../inc/log.h"
+#include "log.h"
+__attribute__((constructor)) static void
+construct(void) {
+	fprintf(stderr, "%s: %s: %d\n", __FILE__, __FUNCTION__, __LINE__);
+	return;
+}
 
-void
-logger(void);
+__attribute__((destructor)) static void destruct(void) {
+	fprintf(stderr, "%s: %s: %d\n", __FILE__, __FUNCTION__, __LINE__);
+	return;
+}
 
 void
 log_print(FILE *fp, unsigned code, char level, const char *format, ...) {

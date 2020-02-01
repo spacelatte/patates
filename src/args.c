@@ -5,15 +5,27 @@ cc -I../inc -o "$FILE" -c "$0"
 exit
 */
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
 
-#include "../inc/main.h"
-#include "../inc/args.h"
+#include "main.h"
+#include "args.h"
+
+__attribute__((constructor)) static void
+construct(void) {
+	fprintf(stderr, "%s: %s: %d\n", __FILE__, __FUNCTION__, __LINE__);
+	return;
+}
+
+__attribute__((destructor)) static void destruct(void) {
+	fprintf(stderr, "%s: %s: %d\n", __FILE__, __FUNCTION__, __LINE__);
+	return;
+}
 
 void
-args(void) {
+args_init(void) {
 	return;
 }
 

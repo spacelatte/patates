@@ -10,13 +10,13 @@ exit
 #include <pthread.h>
 #include <unistd.h>
 
-#include "../inc/main.h"
+#include "main.h"
 
-#include "../inc/args.h"
-#include "../inc/list.h"
+#include "args.h"
+#include "list.h"
 
-#include "../inc/srv.h"
-#include "../inc/http.h"
+#include "srv.h"
+#include "http.h"
 
 bool
 test(list_t *node) {

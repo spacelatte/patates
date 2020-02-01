@@ -11,12 +11,18 @@ exit
 #include <unistd.h>
 #include <pthread.h>
 
-#include "../inc/main.h"
-#include "../inc/http.h"
-#include "../inc/srv.h"
+#include "main.h"
+#include "http.h"
+#include "srv.h"
 
-void
-srv(void) {
+__attribute__((constructor)) static void
+construct(void) {
+	fprintf(stderr, "%s: %s: %d\n", __FILE__, __FUNCTION__, __LINE__);
+	return;
+}
+
+__attribute__((destructor)) static void destruct(void) {
+	fprintf(stderr, "%s: %s: %d\n", __FILE__, __FUNCTION__, __LINE__);
 	return;
 }
 

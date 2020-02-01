@@ -11,20 +11,32 @@ exit
 #include <assert.h>
 #include <signal.h>
 
-#include "../inc/main.h"
-#include "../inc/list.h"
-#include "../inc/http.h"
+#include "main.h"
+#include "list.h"
+#include "http.h"
 
-const char http_header_delimiters[] = " :;,";
+static const char http_header_delimiters[] = " :;,";
 
-const char *http_line_delimiters[] = {
+static const char *http_line_delimiters[] = {
 	"\r\n\r\n",
 	"\r\r",
 	"\n\n",
 	NULL,
 };
 
-void http(void) {
+__attribute__((constructor)) static void
+construct(void) {
+	fprintf(stderr, "%s: %s: %d\n", __FILE__, __FUNCTION__, __LINE__);
+	return;
+}
+
+__attribute__((destructor)) static void destruct(void) {
+	fprintf(stderr, "%s: %s: %d\n", __FILE__, __FUNCTION__, __LINE__);
+	return;
+}
+
+void
+http_init(void) {
 	return;
 }
 

@@ -5,14 +5,26 @@ cc -I../inc -o "$FILE" -c "$0"
 exit
 */
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 
-#include "../inc/main.h"
-#include "../inc/list.h"
+#include "main.h"
+#include "list.h"
+
+__attribute__((constructor)) static void
+construct(void) {
+	fprintf(stderr, "%s: %s: %d\n", __FILE__, __FUNCTION__, __LINE__);
+	return;
+}
+
+__attribute__((destructor)) static void destruct(void) {
+	fprintf(stderr, "%s: %s: %d\n", __FILE__, __FUNCTION__, __LINE__);
+	return;
+}
 
 void
-list(void) {
+list_init(void) {
 	return;
 }
 

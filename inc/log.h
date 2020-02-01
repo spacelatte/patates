@@ -23,6 +23,6 @@ typedef enum log_level {
 
 const char *log_level_chr = "?EWIVD";
 
-void logger(void);
+void log_init(const char*);
 
 #endif

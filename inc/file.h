@@ -6,7 +6,7 @@ exit
 #ifndef _FILE_H_
 #define _FILE_H_
 
-size_t
-file_size(const char*);
+void   file_init(void);
+size_t file_size(const char*);
 
 #endif

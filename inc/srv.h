@@ -27,7 +27,6 @@ typedef struct srv_conenction {
 	int fd;
 } srv_connection_t;
 
-void srv(void);
 void srv_init(const int, const unsigned short);
 
 #endif
