@@ -13,7 +13,7 @@ exit
 #undef NDEBUG
 #endif
 
-#include "../inc/srv.h"
+#include "srv.h"
 
 int
 main(int argc, char **argv) {

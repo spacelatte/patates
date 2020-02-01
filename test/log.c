@@ -13,7 +13,7 @@ exit
 #undef NDEBUG
 #endif
 
-#include "../inc/log.h"
+#include "log.h"
 
 int
 main(int argc, char **argv) {

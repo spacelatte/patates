@@ -17,9 +17,9 @@ exit
 #include <stdlib.h>
 #include <assert.h>
 
-#include "../inc/main.h"
-#include "../inc/args.h"
-#include "../inc/test.h"
+#include "main.h"
+#include "args.h"
+#include "test.h"
 
 void
 test_args_split(unsigned u) {

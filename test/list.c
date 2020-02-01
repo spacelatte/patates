@@ -18,9 +18,9 @@ exit
 #include <signal.h>
 #include <assert.h>
 
-#include "../inc/main.h"
-#include "../inc/list.h"
-#include "../inc/test.h"
+#include "main.h"
+#include "list.h"
+#include "test.h"
 
 void
 test_list_create(unsigned u) {

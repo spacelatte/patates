@@ -8,7 +8,7 @@ INCDIR  := ./inc/
 SRCDIR  := ./src/
 TESTDIR := ./test/
 TARGET  := $(PROJECT).exe
-MODULES := file map args srv http list log type
+MODULES := file map args srv http list log type signal
 
 RM      := rm
 MKDIR   := mkdir

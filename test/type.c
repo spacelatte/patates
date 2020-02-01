@@ -15,7 +15,7 @@ exit
 
 #include <assert.h>
 
-#include "../inc/type.h"
+#include "type.h"
 
 int
 main(int argc, char **argv) {

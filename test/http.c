@@ -17,9 +17,9 @@ exit
 #include <stdlib.h>
 #include <assert.h>
 
-#include "../inc/main.h"
-#include "../inc/http.h"
-#include "../inc/test.h"
+#include "main.h"
+#include "http.h"
+#include "test.h"
 
 void
 test_http_parse_request_line(unsigned u) {

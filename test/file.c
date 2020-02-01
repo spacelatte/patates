@@ -18,9 +18,9 @@ exit
 #include <unistd.h>
 #include <assert.h>
 
-#include "../inc/main.h"
-#include "../inc/file.h"
-#include "../inc/test.h"
+#include "main.h"
+#include "file.h"
+#include "test.h"
 
 void
 file_helper_create(const char *name, const char *contents) {
